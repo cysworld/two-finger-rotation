@@ -8,7 +8,7 @@
 ## 两种授权，任选其一
 
 1. **开源授权**：GNU 通用公共许可证第 3 版（GPL-3.0-only，全文见 [LICENSE](LICENSE)），并附加下面的附加条款。按这个授权使用本软件的作品，发布时也必须按 GPL-3.0 公开源代码。
-2. **商业授权**：不想公开源代码的产品，可以取得商业授权。按产品收费，每款产品 1024 元人民币（境外 154 美元），一次付清；条款见 [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md)。请联系 chengying@cys.world。
+2. **商业授权**：不想公开源代码的产品，可以取得商业授权。按产品收费，每款产品参考价 1024 元人民币（境外参考价 154 美元），一次付清，具体价格可以商量；条款见 [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md)。请联系 chengying@cys.world。
 
 SPDX 标识：`GPL-3.0-only OR LicenseRef-Commercial`
 
@@ -46,7 +46,7 @@ Copyright © 2026 Cheng Ying (程溁) <chengying@cys.world>
 ### Two licenses; choose one
 
 1. **Open source**: the GNU General Public License version 3 only (GPL-3.0-only, full text in [LICENSE](LICENSE)), with the additional terms below. A work that uses this software under this license must also be released with its source code under GPL-3.0 when you distribute it.
-2. **Commercial**: products that do not want to release their source code can obtain a commercial license, priced per product at US$154 (CNY 1024), paid once; see [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md) (Chinese) and contact chengying@cys.world.
+2. **Commercial**: products that do not want to release their source code can obtain a commercial license, priced per product at a reference price of US$154 (CNY 1024), paid once, with the actual price negotiable; see [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md) (Chinese) and contact chengying@cys.world.
 
 SPDX: `GPL-3.0-only OR LicenseRef-Commercial`
 

@@ -43,7 +43,7 @@
 本项目采用双重授权，任选其一：
 
 - **开源授权**：GPL-3.0-only，并附加 GPL-3.0 第 7 条允许的几项附加条款；
-- **商业授权**：用于不想公开源代码的产品。按产品收费，每款产品 1024 元人民币（境外 154 美元），一次付清；请联系 chengying@cys.world。
+- **商业授权**：用于不想公开源代码的产品。按产品收费，每款产品参考价 1024 元人民币（境外参考价 154 美元），一次付清，具体价格可以商量；请联系 chengying@cys.world。
 
 详见 [LICENSING.md](LICENSING.md)。在产品里使用之前，请先阅读其中的法律提示：你需要自行确认在你的国家和销售地区可以合法使用，包括专利。
 
@@ -98,7 +98,7 @@ Requires JDK 17 or later. The engine itself compiles to Java 8 bytecode, so any 
 Dual-licensed; choose one:
 
 - **Open source**: GPL-3.0-only, with additional terms permitted by section 7 of GPL-3.0;
-- **Commercial**: for products that do not want to release their source code. Priced per product: US$154 (CNY 1024) per product, paid once; contact chengying@cys.world.
+- **Commercial**: for products that do not want to release their source code. Priced per product: reference price US$154 (CNY 1024) per product, paid once; the actual price is negotiable. Contact chengying@cys.world.
 
 See [LICENSING.md](LICENSING.md). Before using it in a product, read the legal notice there: you must make sure on your own that it may be used lawfully, including with respect to patents, in your country and wherever you sell.
 

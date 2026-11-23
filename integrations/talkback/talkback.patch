@@ -1,0 +1,93 @@
+diff --git a/talkback/build.gradle b/talkback/build.gradle
+index 84399981..09952608 100644
+--- a/talkback/build.gradle
++++ b/talkback/build.gradle
+@@ -21,4 +21,10 @@ android {
+         buildConfigField("String", "APPLICATION_ID", '"' + talkbackApplicationId + '"')
+         buildConfigField("String", "GEMINI_API_KEY", "\"\"")
+     }
++    // Two-finger rotation: the recognizer and its TalkBack glue live in the sibling
++    // two-finger-rotation checkout (see two-finger-rotation/integrations/talkback/README.md).
++    sourceSets {
++        main.java.srcDirs += ['../../two-finger-rotation/core/src/main/java',
++                              '../../two-finger-rotation/integrations/talkback/src']
++    }
+ }
+diff --git a/talkback/src/main/java/com/google/android/accessibility/talkback/TouchInteractionMonitor.java b/talkback/src/main/java/com/google/android/accessibility/talkback/TouchInteractionMonitor.java
+index ccad56b3..843dc215 100644
+--- a/talkback/src/main/java/com/google/android/accessibility/talkback/TouchInteractionMonitor.java
++++ b/talkback/src/main/java/com/google/android/accessibility/talkback/TouchInteractionMonitor.java
+@@ -150,6 +150,9 @@ public class TouchInteractionMonitor
+   private Thread executorThread;
+   private final GestureManifold gestureDetector;
+   private boolean gestureStarted = false;
++  // Two-finger rotation (two-finger-rotation project): turning two fingers selects the next or
++  // previous reading control. See cysworld.talkback.TalkBackRotation.
++  private final cysworld.talkback.TalkBackRotation rotation;
+   // Whether double tap and double tap and hold will be dispatched to the service or handled in
+   // the framework.
+   private boolean serviceHandlesDoubleTap = false;
+@@ -308,6 +311,23 @@ public class TouchInteractionMonitor
+     requestStateChangeInSameThread = FeatureFlagReader.requestStateChangeInSameThread(context);
+     displayId = context.getDisplay().getDisplayId();
+     mainHandler = new Handler(context.getMainLooper());
++    rotation =
++        new cysworld.talkback.TalkBackRotation(
++            context,
++            new cysworld.talkback.TalkBackRotation.Host() {
++              @Override
++              public void onRotationStarted() {
++                gestureStarted = true;
++                gestureDetector.clear();
++                requestTouchExplorationDelayed.cancel();
++              }
++
++              @Override
++              public void dispatchGesture(int gestureId) {
++                dispatchGestureToMainThread(
++                    new AccessibilityGestureEvent(gestureId, displayId, new ArrayList<MotionEvent>()));
++              }
++            });
+     this.touchExplorationModeFailureReporter = touchExplorationModeFailureReporter;
+     gestureDetector =
+         new GestureManifold(
+@@ -466,6 +486,10 @@ public class TouchInteractionMonitor
+       return;
+     }
+     receivedPointerTracker.onMotionEvent(event);
++    if (rotation.onMotionEvent(event, state == STATE_TOUCH_INTERACTING)) {
++      // The touch is a two-finger rotation; it stays with TalkBack until all fingers lift.
++      return;
++    }
+     if (shouldPerformGestureDetection()) {
+       if (waitFirstMotionEvent && event.getActionMasked() == ACTION_POINTER_DOWN) {
+         // The split-typing gesture expect no action-down when re-entering the touch exploration
+@@ -506,6 +530,10 @@ public class TouchInteractionMonitor
+             // Do nothing. Touch exploration will fire on a delay.
+             break;
+           case 2:
++            if (rotation.isUndecided()) {
++              // Two-finger rotation is still deciding: hold the touch (no drag, no delegate).
++              return;
++            }
+             if (gestureDetector.isTwoFingerPassthroughEnabled()) {
+               for (int index = 0; index < event.getPointerCount(); ++index) {
+                 int id = event.getPointerId(index);
+diff --git a/talkback/src/main/java/com/google/android/accessibility/talkback/gesture/GestureShortcutMapping.java b/talkback/src/main/java/com/google/android/accessibility/talkback/gesture/GestureShortcutMapping.java
+index 5d476f42..63110cce 100644
+--- a/talkback/src/main/java/com/google/android/accessibility/talkback/gesture/GestureShortcutMapping.java
++++ b/talkback/src/main/java/com/google/android/accessibility/talkback/gesture/GestureShortcutMapping.java
+@@ -760,6 +760,13 @@ public class GestureShortcutMapping implements GestureShortcutProvider {
+       // These 2 gestures are dedicated for switching gesture set.
+       return gestureSetEnabled ? context.getString(R.string.switch_gesture_set) : actionUnassigned;
+     }
++    // Two-finger rotation: each detent selects the next or previous reading control.
++    if (gestureId == cysworld.talkback.TalkBackRotation.GESTURE_ROTATE_CW) {
++      return context.getString(R.string.shortcut_value_select_next_setting);
++    }
++    if (gestureId == cysworld.talkback.TalkBackRotation.GESTURE_ROTATE_CCW) {
++      return context.getString(R.string.shortcut_value_select_previous_setting);
++    }
+     String action = gestureIdToActionKey.get(index).get(gestureId);
+     return action == null ? actionUnassigned : action;
+   }
